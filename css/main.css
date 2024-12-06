@@ -54,4 +54,10 @@ body {
     margin: 0 auto;
     padding-left: 2rem;
     padding-right: 2rem;
+}
+
+.nav-content .user-info {
+    color: #1d1d1f;
+    margin-right: 20px;
+    font-size: 14px;
 } 

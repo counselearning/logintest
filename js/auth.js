@@ -15,7 +15,8 @@ async function initializeAuth0() {
         if (window.location.search.includes("code=")) {
             await auth0Client.handleRedirectCallback();
             window.history.replaceState({}, document.title, window.location.pathname);
-            window.location.href = 'main.html';
+            window.location.href = config.mainPageUri;
+            return;
         }
         await checkAuth();
     } catch (err) {
@@ -30,7 +31,7 @@ async function checkAuth() {
         const loginBtn = document.getElementById('loginBtn');
         
         if (isAuthenticated) {
-            window.location.href = 'main.html';
+            window.location.href = config.mainPageUri;
         } else {
             loginBtn.textContent = '登入';
             loginBtn.onclick = login;
