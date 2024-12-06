@@ -1,5 +1,8 @@
 let auth0Client;
 
+// 在頁面載入時隱藏內容
+document.body.style.display = 'none';
+
 // 初始化 Auth0 客戶端
 async function initializeAuth0() {
     try {
@@ -8,23 +11,28 @@ async function initializeAuth0() {
             clientId: config.clientId,
             authorizationParams: {
                 redirect_uri: config.redirectUri
-            }
+            },
+            cacheLocation: 'localstorage'
         });
 
         // 檢查是否已登入
         const isAuthenticated = await auth0Client.isAuthenticated();
+        
         if (!isAuthenticated) {
-            window.location.href = config.redirectUri;
+            window.location.replace(config.redirectUri);
             return;
         }
 
         // 獲取用戶信息
         const user = await auth0Client.getUser();
         displayUserInfo(user);
+        
+        // 顯示頁面內容
+        document.body.style.display = 'block';
 
     } catch (err) {
         console.error("Auth0初始化錯誤:", err);
-        window.location.href = config.redirectUri;
+        window.location.replace(config.redirectUri);
     }
 }
 
@@ -47,6 +55,7 @@ async function logout() {
         });
     } catch (err) {
         console.error("登出錯誤:", err);
+        window.location.replace(config.redirectUri);
     }
 }
 
@@ -57,6 +66,6 @@ document.getElementById('logoutBtn').addEventListener('click', logout);
 window.addEventListener('load', () => {
     initializeAuth0().catch(err => {
         console.error("初始化錯誤:", err);
-        window.location.href = config.redirectUri;
+        window.location.replace(config.redirectUri);
     });
 }); 

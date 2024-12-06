@@ -8,14 +8,15 @@ async function initializeAuth0() {
             clientId: config.clientId,
             authorizationParams: {
                 redirect_uri: config.redirectUri
-            }
+            },
+            cacheLocation: 'localstorage'
         });
 
         // 檢查是否是從授權重定向回來
         if (window.location.search.includes("code=")) {
             await auth0Client.handleRedirectCallback();
             window.history.replaceState({}, document.title, window.location.pathname);
-            window.location.href = config.mainPageUri;
+            window.location.replace(config.mainPageUri);
             return;
         }
         await checkAuth();
@@ -31,7 +32,7 @@ async function checkAuth() {
         const loginBtn = document.getElementById('loginBtn');
         
         if (isAuthenticated) {
-            window.location.href = config.mainPageUri;
+            window.location.replace(config.mainPageUri);
         } else {
             loginBtn.textContent = '登入';
             loginBtn.onclick = login;
