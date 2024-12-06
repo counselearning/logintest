@@ -23,9 +23,23 @@ async function initializeAuth0() {
 // 檢查認證狀態
 async function checkAuth() {
     const isAuthenticated = await auth0Client.isAuthenticated();
+    const loginBtn = document.getElementById('loginBtn');
+    
     if (isAuthenticated) {
-        // 如果已登入，重定向到主頁面（之後您需要創建這個頁面）
-        window.location.href = '/main.html';
+        const user = await auth0Client.getUser();
+        loginBtn.textContent = '登出';
+        loginBtn.onclick = logout;
+        
+        // 顯示用戶信息
+        const userInfo = document.createElement('div');
+        userInfo.className = 'user-info';
+        userInfo.innerHTML = `
+            <p>歡迎, ${user.name || user.email}</p>
+        `;
+        document.querySelector('.login-box').insertBefore(userInfo, loginBtn);
+    } else {
+        loginBtn.textContent = '登入';
+        loginBtn.onclick = login;
     }
 }
 
@@ -34,8 +48,14 @@ async function login() {
     await auth0Client.loginWithRedirect();
 }
 
-// 綁定登入按鈕事件
-document.getElementById('loginBtn').addEventListener('click', login);
+// 登出功能
+async function logout() {
+    await auth0Client.logout({
+        logoutParams: {
+            returnTo: window.location.origin + window.location.pathname
+        }
+    });
+}
 
 // 初始化
 initializeAuth0().catch(err => console.error(err)); 

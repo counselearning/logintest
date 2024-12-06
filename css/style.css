@@ -51,4 +51,17 @@ p {
 
 .login-button:hover {
     background-color: #0077ed;
+}
+
+.user-info {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 6px;
+}
+
+.user-info p {
+    color: #1d1d1f;
+    margin-bottom: 0;
+    font-size: 14px;
 } 
